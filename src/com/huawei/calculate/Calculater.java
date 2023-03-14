@@ -26,11 +26,17 @@ public class Calculater {
         //根据y的正负映射到[0, 2pi]
         beta = vector_y>0?beta:(2*Math.PI-beta);
 
+        /**
+         * m(kg)    12.724     17.65
+         * a(m/s^2) 19.6479    14.1643
+         * vt/2     0.9m       1.2708m
+         */
         //线速度计算
-        if(modulus <= 0.12){//0.12m为6m/s经过1帧（即20ms）移动的距离
-            list.add(modulus/0.02);//一帧内能移动到目的地则减速
-        }
-        else{
+        if(modulus <= 0.4){//到达目标地点则减到0
+            list.add(0.0);
+        } else if (modulus <= 1) {//考虑惯性，提前开始减速，为了避免停在0.4的范围之外卡死，所以给了一个最低限度的速度
+            list.add(1.0);
+        } else{
             list.add(6.0);//保持6m/s最大速度
         }
 
