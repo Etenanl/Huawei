@@ -20,7 +20,7 @@ public class Calculater {
         //向量的模
         double modulus = Math.sqrt(vector_x*vector_x+vector_y*vector_y);
         //航向角从[-pi, pi]转换为[0, 2pi]
-        double alpha = robot.direction>=0?robot.direction:(Math.PI-robot.direction);
+        double alpha = robot.direction>=0?robot.direction:(2*Math.PI+robot.direction);
         //向量角
         double beta = Math.acos(vector_x/modulus);//目前取值为[0, pi]
         //根据y的正负映射到[0, 2pi]
@@ -35,11 +35,21 @@ public class Calculater {
         }
 
         //角速度计算
-        if(beta > alpha){//应该逆时针旋转
-            list.add(Math.PI);
+        if(beta > alpha){
+            if(beta - alpha < Math.PI){//应该逆时针旋转
+                list.add(Math.PI);
+            }
+            else{//顺时针旋转
+                list.add(-Math.PI);
+            }
         }
-        else if(beta < alpha){//顺时针旋转
-            list.add(-Math.PI);
+        else if(beta < alpha){
+            if(alpha - beta < Math.PI){//顺时针旋转
+                list.add(-Math.PI);
+            }
+            else {//应该逆时针旋转
+                list.add(Math.PI);
+            }
         }
         else{//不旋转
             list.add(0.0);
