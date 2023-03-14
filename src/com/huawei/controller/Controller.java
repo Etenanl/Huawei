@@ -28,29 +28,30 @@ public class Controller {
     public static HashMap<Integer,int[]>DstinationStationToPlan = new HashMap<>();
     public void MakePlan(){
         //1,2,3->4,5,6
-        planArray[1] = new Plan(1,1,4,3,5);
-        planArray[2] = new Plan(2,2,4,3,5);
+        planArray[1] = new Plan(1,1,4,Const.RANK_THREE,Const.RANK_FIVE);
+        planArray[2] = new Plan(2,2,4,Const.RANK_THREE,Const.RANK_FIVE);
 
-        planArray[3] = new Plan(3,1,5,3,5);
-        planArray[4] = new Plan(4,3,5,4,5);
+        planArray[3] = new Plan(3,1,5,Const.RANK_THREE,Const.RANK_FIVE);
+        planArray[4] = new Plan(4,3,5,Const.RANK_FOUR,Const.RANK_FIVE);
 
-        planArray[5] = new Plan(5,2,6,4,5);
-        planArray[6] = new Plan(6,3,6,4,5);
+        planArray[5] = new Plan(5,2,6,Const.RANK_FOUR,Const.RANK_FIVE);
+        planArray[6] = new Plan(6,3,6,Const.RANK_FOUR,Const.RANK_FIVE);
         //4,5,6->7
-        planArray[7] = new Plan(7,4,7,5,5);
-        planArray[8] = new Plan(8,5,7,5,5);
-        planArray[9] = new Plan(9,6,7,5,5);
+        planArray[7] = new Plan(7,4,7,Const.RANK_FIVE,Const.RANK_FIVE);
+        planArray[8] = new Plan(8,5,7,Const.RANK_FIVE,Const.RANK_FIVE);
+        planArray[9] = new Plan(9,6,7,Const.RANK_FIVE,Const.RANK_FIVE);
         //7_8
-        planArray[10] = new Plan(10,7,8,6,5);
+        planArray[10] = new Plan(10,7,8,Const.RANK_SIX,Const.RANK_FIVE);
 
         //1~7->9
-        planArray[11] = new Plan(11,1,9,3,5);
-        planArray[12] = new Plan(12,2,9,3,5);
-        planArray[13] = new Plan(13,3,9,3,5);
-        planArray[14] = new Plan(14,4,9,4,5);
-        planArray[15] = new Plan(15,5,9,4,5);
-        planArray[16] = new Plan(16,6,9,4,5);
-        planArray[17] = new Plan(17,7,9,5,5);
+        planArray[11] = new Plan(11,1,9,Const.RANK_THREE,Const.RANK_FIVE);
+        planArray[12] = new Plan(12,2,9,Const.RANK_THREE,Const.RANK_FIVE);
+        planArray[13] = new Plan(13,3,9,Const.RANK_THREE,Const.RANK_FIVE);
+        planArray[14] = new Plan(14,4,9,Const.RANK_FOUR,Const.RANK_FIVE);
+        planArray[15] = new Plan(15,5,9,Const.RANK_FOUR,Const.RANK_FIVE);
+        planArray[16] = new Plan(16,6,9,Const.RANK_FOUR,Const.RANK_FIVE);
+        planArray[17] = new Plan(17,7,9,Const.RANK_FIVE,Const.RANK_FIVE);
+
         SourceStationToPlan.put(1,new int[]{1,3,11});
         SourceStationToPlan.put(2,new int[]{2,5,12});
         SourceStationToPlan.put(3,new int[]{4,6,13});

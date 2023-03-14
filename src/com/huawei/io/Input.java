@@ -23,5 +23,12 @@ public class Input {
     static void findID(){
 
     }
+    static void updateWorkStation(){
+
+    }
+    static void updataRobot(){
+
+    }
+
 }
 
