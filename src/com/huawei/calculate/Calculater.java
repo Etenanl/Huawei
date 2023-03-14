@@ -9,8 +9,6 @@ import java.util.List;
 public class Calculater {
 
     public static List<Double> Caculate(Robot robot){
-
-
         List<Double>list = new LinkedList<>();
         //根据状态来判断目的地
         double Destination_x = robot.state==1?robot.buyDestination_x:robot.sellDestination_x;
@@ -67,6 +65,11 @@ public class Calculater {
     public static int BuyOrSell(Robot robot){
         return Const.DO_NOTHING;
     }
+
+    public static double CalculateCost(Robot robot,int x1,int y1,int x2,int y2){
+        return 0.0;
+    }
+
 
 
 

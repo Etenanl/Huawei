@@ -70,4 +70,13 @@ public class Robot {
     //机器人处于状态2时卖东西要去的目的地工作站
     public double sellDestination_x;
     public double sellDestination_y;
+
+    public  void SetInfo(int state,double buyDestination_x,double buyDestination_y,double sellDestination_x,double sellDestination_y){
+        this.state = state;
+        this.buyDestination_x = buyDestination_x;
+        this.buyDestination_y = buyDestination_y;
+        this.sellDestination_x = sellDestination_x;
+        this.sellDestination_y = sellDestination_y;
+
+    }
 }
