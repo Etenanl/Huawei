@@ -58,7 +58,7 @@ public class Robot {
     //计划中分配给机器人要运送的产品
     public int planProduction;
     //每帧输入中机器人真实携带的物品，用于判断是否成功买入或卖出计划运送的产品
-    public int realProduction
+    public int realProduction;
     //朝向
     public double direction;
     public double speed;
