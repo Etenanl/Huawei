@@ -66,7 +66,7 @@ public class Calculater {
         return Const.DO_NOTHING;
     }
 
-    public static double CalculateCost(Robot robot,int x1,int y1,int x2,int y2){
+    public static double CalculateCost(Robot robot,double x1,double y1,double x2,double y2){
         return 0.0;
     }
 

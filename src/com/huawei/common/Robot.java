@@ -63,6 +63,8 @@ public class Robot {
     public double direction;
     public double speed;
 
+    public int planID;
+
     //机器人处于状态1时买东西要去的目的地工作站
     public double buyDestination_x;
     public double buyDestination_y;
@@ -78,5 +80,11 @@ public class Robot {
         this.sellDestination_x = sellDestination_x;
         this.sellDestination_y = sellDestination_y;
 
+    }
+    public  void SetPlanID(int id){
+        this.planID = id;
+    }
+    public  void SetState(int state){
+        this.state = state;
     }
 }
