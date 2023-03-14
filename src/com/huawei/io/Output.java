@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Output {
 
-    public static void Print (List<String> list){
+    public static void Print (List<List<String>> list){
 
     }
 

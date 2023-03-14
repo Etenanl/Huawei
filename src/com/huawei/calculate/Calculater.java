@@ -1,5 +1,6 @@
 package com.huawei.calculate;
 
+import com.huawei.common.Const;
 import com.huawei.common.Robot;
 
 import java.util.LinkedList;
@@ -39,7 +40,6 @@ public class Calculater {
         } else{
             list.add(6.0);//保持6m/s最大速度
         }
-
         //角速度计算
         if(beta > alpha){
             if(beta - alpha < Math.PI){//应该逆时针旋转
@@ -60,7 +60,14 @@ public class Calculater {
         else{//不旋转
             list.add(0.0);
         }
-
         return list;
     }
+
+    //0不做任何事，1 buy，
+    public static int BuyOrSell(Robot robot){
+        return Const.DO_NOTHING;
+    }
+
+
+
 }
