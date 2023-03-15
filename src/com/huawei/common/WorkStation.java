@@ -8,9 +8,9 @@ public class WorkStation{
     //工作台id
     public int id;
     //原材料格状态
-    public int state;
+    public int material;
     //产品格状态
-    public boolean production;
+    public int production;
     //剩余生产时间
     public int time;
 

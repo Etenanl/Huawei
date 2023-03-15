@@ -64,24 +64,36 @@ public class Calculater {
     //0不做任何事，1 buy，
     public static int BuyOrSell(Robot robot){
         if(robot.state == Const.ROBOT_IDEL){
-            return Const.DO_NOTHING;
+            return  Const.DO_NOTHING;
         } else if (robot.state == Const.ROBOT_FIRST) {
-            //如果可以购买
-            //1.只可能去第一个工作台时买，如果此时robot有货物，则先卖后买
-            if(true){
+            if (robot.realWorkstationID == robot.buyDestinationID){//状态1且到达买的工作站
                 return Const.BUY;
-            } else if (false) {
-                return Const.BUY_AND_SELL;
             }
-        } else if (robot.state == Const.ROBOT_FIRST) {
-            //如果可以卖出
-            if(true){
+        } else if (robot.state == Const.ROBOT_SECOND) {
+            if (robot.realWorkstationID == robot.sellDestinationID){//状态2且到达卖的工作站
                 return Const.SELL;
             }
         }
-
-
         return Const.DO_NOTHING;
+//        if(robot.state == Const.ROBOT_IDEL){
+//            return Const.DO_NOTHING;
+//        } else if (robot.state == Const.ROBOT_FIRST) {
+//            //如果可以购买
+//            //1.只可能去第一个工作台时买，如果此时robot有货物，则先卖后买
+//            if(true){
+//                return Const.BUY;
+//            } else if (false) {
+//                return Const.BUY_AND_SELL;
+//            }
+//        } else if (robot.state == Const.ROBOT_FIRST) {
+//            //如果可以卖出
+//            if(true){
+//                return Const.SELL;
+//            }
+//        }
+//
+//
+//        return Const.DO_NOTHING;
     }
 
     public static double CalculateCost(Robot robot,double x1,double y1,double x2,double y2){

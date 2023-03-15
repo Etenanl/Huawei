@@ -59,6 +59,8 @@ public class Robot {
     public int planProduction;
     //每帧输入中机器人真实携带的物品，用于判断是否成功买入或卖出计划运送的产品
     public int realProduction;
+    //每帧输入中机器人所处工作台ID
+    public int realWorkstationID;
     //朝向
     public double direction;
     public double speed;
@@ -66,10 +68,12 @@ public class Robot {
     public int planID;
 
     //机器人处于状态1时买东西要去的目的地工作站
+    public int buyDestinationID;
     public double buyDestination_x;
     public double buyDestination_y;
 
     //机器人处于状态2时卖东西要去的目的地工作站
+    public int sellDestinationID;
     public double sellDestination_x;
     public double sellDestination_y;
 
