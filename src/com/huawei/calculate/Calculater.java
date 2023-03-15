@@ -63,11 +63,35 @@ public class Calculater {
 
     //0不做任何事，1 buy，
     public static int BuyOrSell(Robot robot){
+        if(robot.state == Const.ROBOT_IDEL){
+            return Const.DO_NOTHING;
+        } else if (robot.state == Const.ROBOT_FIRST) {
+            //如果可以购买
+            //1.只可能去第一个工作台时买，如果此时robot有货物，则先卖后买
+            if(true){
+                return Const.BUY;
+            } else if (false) {
+                return Const.BUY_AND_SELL;
+            }
+        } else if (robot.state == Const.ROBOT_FIRST) {
+            //如果可以卖出
+            if(true){
+                return Const.SELL;
+            }
+        }
+
+
         return Const.DO_NOTHING;
     }
 
     public static double CalculateCost(Robot robot,double x1,double y1,double x2,double y2){
-        return 0.0;
+        double costFirst = Math.sqrt(Math.pow(Math.abs(robot.x-x1),2)+Math.pow(Math.abs(robot.y-y1),2));
+        double costSecond = Math.sqrt(Math.pow(Math.abs(x1-x2),2)+Math.pow(Math.abs(y1-y2),2));
+
+
+
+
+        return costFirst+costSecond;
     }
 
 

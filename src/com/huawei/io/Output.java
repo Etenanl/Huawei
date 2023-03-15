@@ -7,6 +7,4 @@ public class Output {
     public static void Print (List<List<String>> list){
 
     }
-
-
 }
