@@ -2,6 +2,7 @@ package com.huawei.calculate;
 
 import com.huawei.common.Const;
 import com.huawei.common.Robot;
+import com.huawei.io.Input;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -75,34 +76,17 @@ public class Calculater {
             }
         }
         return Const.DO_NOTHING;
-//        if(robot.state == Const.ROBOT_IDEL){
-//            return Const.DO_NOTHING;
-//        } else if (robot.state == Const.ROBOT_FIRST) {
-//            //如果可以购买
-//            //1.只可能去第一个工作台时买，如果此时robot有货物，则先卖后买
-//            if(true){
-//                return Const.BUY;
-//            } else if (false) {
-//                return Const.BUY_AND_SELL;
-//            }
-//        } else if (robot.state == Const.ROBOT_FIRST) {
-//            //如果可以卖出
-//            if(true){
-//                return Const.SELL;
-//            }
-//        }
-//
-//
-//        return Const.DO_NOTHING;
     }
 
-    public static double CalculateCost(Robot robot,double x1,double y1,double x2,double y2){
+    public static double CalculateCost(Robot robot,double x1,double y1,double x2,double y2,int firstID,int secondID){
         double costFirst = Math.sqrt(Math.pow(Math.abs(robot.x-x1),2)+Math.pow(Math.abs(robot.y-y1),2));
         double costSecond = Math.sqrt(Math.pow(Math.abs(x1-x2),2)+Math.pow(Math.abs(y1-y2),2));
 
-
-
-
+        if(costFirst/5.0< Input.workStationMap.get(firstID).time){
+            return Integer.MAX_VALUE;
+        } else if (((costFirst+costSecond)/5.0< Input.workStationMap.get(secondID).time)) {
+            return Integer.MAX_VALUE;
+        }
         return costFirst+costSecond;
     }
 

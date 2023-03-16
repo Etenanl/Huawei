@@ -44,13 +44,13 @@ public class Controller {
         planArray[10] = new Plan(10,7,8,Const.RANK_SIX,Const.RANK_FIVE);
 
         //1~7->9
-        planArray[11] = new Plan(11,1,9,Const.RANK_THREE,Const.RANK_FIVE);
-        planArray[12] = new Plan(12,2,9,Const.RANK_THREE,Const.RANK_FIVE);
-        planArray[13] = new Plan(13,3,9,Const.RANK_THREE,Const.RANK_FIVE);
-        planArray[14] = new Plan(14,4,9,Const.RANK_FOUR,Const.RANK_FIVE);
-        planArray[15] = new Plan(15,5,9,Const.RANK_FOUR,Const.RANK_FIVE);
-        planArray[16] = new Plan(16,6,9,Const.RANK_FOUR,Const.RANK_FIVE);
-        planArray[17] = new Plan(17,7,9,Const.RANK_FIVE,Const.RANK_FIVE);
+        planArray[11] = new Plan(11,1,9,Const.RANK_TWO,Const.RANK_FIVE);
+        planArray[12] = new Plan(12,2,9,Const.RANK_TWO,Const.RANK_FIVE);
+        planArray[13] = new Plan(13,3,9,Const.RANK_TWO,Const.RANK_FIVE);
+        planArray[14] = new Plan(14,4,9,Const.RANK_THREE,Const.RANK_FIVE);
+        planArray[15] = new Plan(15,5,9,Const.RANK_THREE,Const.RANK_FIVE);
+        planArray[16] = new Plan(16,6,9,Const.RANK_THREE,Const.RANK_FIVE);
+        planArray[17] = new Plan(17,7,9,Const.RANK_FOUR,Const.RANK_FIVE);
 
         SourceStationToPlan.put(1,new int[]{1,3,11});
         SourceStationToPlan.put(2,new int[]{2,5,12});
@@ -73,10 +73,11 @@ public class Controller {
     public void Initialize(){
         //取到每一个工作台位置并编辑plan
         MakePlan();
-
+        for(int i = 0;i<robots.length;i++){
+            robots[i] = Input.robotMap.get(i);
+        }
 
         //初始化WorkStations
-        Set<Integer> stationsID = Input.workStationMap.keySet();
         Set<Map.Entry<Integer,WorkStation>> entrys = Input.workStationMap.entrySet();
         for(Map.Entry<Integer,WorkStation> entry : entrys){
             //初始化WorkStations
@@ -107,11 +108,18 @@ public class Controller {
             if(robots[i].state==Const.ROBOT_IDEL){
                 idleRobots[i] = Const.ROBOT_IDEL;
                 flag++;
+                //修正plan优先级
+                planArray[robots[i].planID].secondPriority++;
+                robots[i].SetPlanID(-1);
+
             }else if(robots[i].state==Const.ROBOT_FIRST||robots[i].state==Const.ROBOT_SECOND){
                 idleRobots[i] = Const.ROBOT_BUSY;
             }
+
+
         }
-        List<List<String>> res = new LinkedList<>();
+        StringBuilder res = new StringBuilder();
+
         if(flag!=0){
             //此时有空闲机器人
             //通过两个指针保证操作一致
@@ -125,19 +133,23 @@ public class Controller {
                 double cost = Integer.MAX_VALUE;
                 int[] direction = new int[2];
                 int robotID = -1;
+                int type = -1;
                 //三重循环找到cost最小的高优先级任务和机器人；
                 outer:
                 for(int first : plan.sourceList){
                     for(int second : plan.destinationList){
                         for(int i = 0;i<idleRobots.length;i++){
                             if(idleRobots[i]==Const.ROBOT_IDEL){
+                                //
+                                //工作台空闲时间
                                 double now_cost = Calculater.CalculateCost(robots[i],WorkStations.get(first)[0],
                                         WorkStations.get(first)[1],WorkStations.get(second)[0],
-                                        WorkStations.get(second)[1]);
+                                        WorkStations.get(second)[1],first,second);
                                 if(now_cost<cost){
                                     cost = now_cost;
                                     direction = new int[]{first,second};
                                     robotID = i;
+                                    type = plan.sourceType;
 
                                     //修改plan的第二优先级
                                     //
@@ -150,20 +162,25 @@ public class Controller {
                                 }
                             }
                         }
-
                     }
                 }
                 //更新robot信息
-                robots[robotID].SetInfo(Const.ROBOT_FIRST,WorkStations.get(direction[0])[0],
-                        WorkStations.get(direction[0])[1],WorkStations.get(direction[1])[0],
-                        WorkStations.get(direction[1])[1]);
-                robots[robotID].SetPlanID(plan.planID);
-                List<Double>list = Calculater.Caculate(robots[robotID]);
-                List<String> s = new LinkedList<>();
-                s.add("forward "+robotID+" "+list.get(0));
-                s.add("rotate "+robotID+" "+list.get(0));
-                res.add(s);
-                flag--;
+                //如果可以直接购买，则购买
+                if(true){
+
+                }else{
+
+                    robots[robotID].SetInfo(Const.ROBOT_FIRST,WorkStations.get(direction[0])[0],
+                            WorkStations.get(direction[0])[1],WorkStations.get(direction[1])[0],
+                            WorkStations.get(direction[1])[1],type,direction[0],direction[1]);
+                    robots[robotID].SetPlanID(plan.planID);
+                    List<Double>list = Calculater.Caculate(robots[robotID]);
+
+                    res.append("forward ").append(robotID).append(" ").append(list.get(0)).append('\n');
+                    res.append("rotate ").append(robotID).append(" ").append(list.get(1)).append('\n');
+
+                    flag--;
+                }
             }
             //清空当前优先级队列
             while (!plans.isEmpty()) {
@@ -176,61 +193,50 @@ public class Controller {
         for(int i = 0;i<idleRobots.length;i++){
             if(idleRobots[i] == Const.ROBOT_BUSY){
                 Robot robot = robots[i];
-                List<String> temp = null;
+
                 int action = Calculater.BuyOrSell(robot);
-                temp = addAction(action,robot.id);
+                String temp = addAction(action,robot.id);
                 //不需要买卖，修正运动轨迹
                 if(temp==null){
-                    temp = new LinkedList<>();
+
                     Double[] move =Calculater.Caculate(robot).toArray(new Double[2]);
-                    temp.add("forward "+robot.id+" "+move[0]);
-                    temp.add("rotate "+robot.id+" "+move[1]);
+                    res.append("forward ").append(robot.id).append(" ").append(move[0]).append('\n');
+                    res.append("rotate ").append(robot.id).append(" ").append(move[1]).append('\n');
                 }else{
                     //进行买卖，这帧不再运动
                     //修改plan，如果只包含卖，应当把id变为0
-                    if(action == Const.BUY_AND_SELL){
-                        robot.SetState(Const.ROBOT_IDEL);
-                        planArray[robot.planID].secondPriority++;
-                        robot.SetPlanID(-1);
-
-                    }
+                    res.append(temp).append('\n');
                 }
-                res.add(temp);
+
             }
         }
         Output.Print(res);
 
     }
 
-    List<String> addAction(int action,int id){
-        List<String> res = new ArrayList<>();
+    String addAction(int action,int id){
+        String res = null;
         switch (action){
             case Const.DO_NOTHING:
                 return null;
             case Const.BUY:
-                res.add("buy "+id);
-
+                res="buy "+id;
                 break;
             case Const.SELL:
-                res.add("sell "+id);
-                break;
-                case Const.BUY_AND_SELL:
-                    res.add("buy "+id);
-                    res.add("sell "+id);
-
+                res="sell "+id;
         }
         return res;
     }
 
 }
 class Plan implements Comparable{
-    int sourceID;
-    int destinationID;
+    int sourceType;
+    int destinationType;
     List<Integer>sourceList = new LinkedList<>();
     List<Integer>destinationList=new LinkedList<>();
     int firstPriority;
     int secondPriority;
-
+    int type;
     int planID;
 
     public void AddSource(int id){
@@ -240,12 +246,13 @@ class Plan implements Comparable{
         this.destinationList.add(id);
     }
 
-    public Plan(int planID,int sourceID,int destinationID,int firstPriority,int secondPriority){
+    public Plan(int planID,int sourceType,int destinationType,int firstPriority,int secondPriority){
         this.planID = planID;
-        this.sourceID = sourceID;
-        this.destinationID = destinationID;
+        this.sourceType = sourceType;
+        this.destinationType = destinationType;
         this.firstPriority = firstPriority;
         this.secondPriority = secondPriority;
+
 
     }
 
