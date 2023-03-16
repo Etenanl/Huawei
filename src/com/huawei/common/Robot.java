@@ -77,12 +77,15 @@ public class Robot {
     public double sellDestination_x;
     public double sellDestination_y;
 
-    public  void SetInfo(int state,double buyDestination_x,double buyDestination_y,double sellDestination_x,double sellDestination_y){
+    public  void SetInfo(int state,double buyDestination_x,double buyDestination_y,double sellDestination_x,double sellDestination_y,int planProduction, int buyDestinationID, int sellDestinationID){
         this.state = state;
         this.buyDestination_x = buyDestination_x;
         this.buyDestination_y = buyDestination_y;
         this.sellDestination_x = sellDestination_x;
         this.sellDestination_y = sellDestination_y;
+        this.planProduction = planProduction;
+        this.buyDestinationID = buyDestinationID;
+        this.sellDestinationID = sellDestinationID;
 
     }
     public  void SetPlanID(int id){

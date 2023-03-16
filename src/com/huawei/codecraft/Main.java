@@ -6,6 +6,7 @@ import com.huawei.io.Input;
 
 
 import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -13,12 +14,13 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static final Scanner inStream = new Scanner(System.in);
 
-    private static final PrintStream outStream = new PrintStream(new BufferedOutputStream(System.out));
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Input.ReadMap();
-        Input.ReadFrame();
+        String line;
+        while ((line = Input.inStream.readLine()) != null){
+            Input.ReadFrame(line);
+        }
 //        readUtilOK();
 //        outStream.println("OK");
 //        outStream.flush();
@@ -61,15 +63,4 @@ public class Main {
 //        List a = Calculater.Caculate(testRobot);
     }
 
-    private static boolean readUtilOK() {
-        String line;
-        while (inStream.hasNextLine()) {
-            line = inStream.nextLine();
-            if ("OK".equals(line)) {
-                return true;
-            }
-            // do something;
-        }
-        return false;
-    }
 }

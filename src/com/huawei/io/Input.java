@@ -4,6 +4,9 @@ import com.huawei.common.Const;
 import com.huawei.common.Robot;
 import com.huawei.common.WorkStation;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -17,14 +20,14 @@ public class Input {
     public static Map<Integer, WorkStation> workStationMap = new HashMap<>();
     public static Map<Integer, Robot>robotMap = new HashMap<>();
 
-    private static final Scanner inStream = new Scanner(System.in);
+    public static final BufferedReader inStream = new BufferedReader(new InputStreamReader(System.in));
     //读取地图，第一次更新workStationMap
     //这里读map信息时没有工作台id，读frame才有工作台id，可以想办法进行对应，或者干脆不读取map信息，读第一帧才进行全部初始化
-    public static void ReadMap(){
+    public static void ReadMap() throws IOException {
         int robotID = 0;
         int workstationID = 0;
         for (int i = 0; i < 100; i++) {
-            String line = inStream.nextLine();
+            String line = inStream.readLine();
             for (int j = 0; j < 100; j++) {
                 if(line.charAt(j) == 'A'){
                     Robot initialRobot = new Robot();
@@ -45,24 +48,24 @@ public class Input {
             }
         }
         //读取OK
-        inStream.nextLine();
+        inStream.readLine();
         Output.OKPrint();
     }
     //读取每一帧内容
-    public static void ReadFrame(){
-        String[] parts = inStream.nextLine().split(" ");
+    public static void ReadFrame(String line) throws IOException{
+        String[] parts = line.split(" ");
         frame = Integer.parseInt(parts[0]);
         money = Integer.parseInt(parts[1]);
-        workstationNum = Integer.parseInt(inStream.nextLine());
+        workstationNum = Integer.parseInt(inStream.readLine());
         for (int i = 0; i < workstationNum; i++) {
-            parts = inStream.nextLine().split(" ");
+            parts = inStream.readLine().split(" ");
             WorkStation station = workStationMap.get(i);
             station.time = Integer.parseInt(parts[3]);
             station.material = Integer.parseInt(parts[4]);
             station.production = Integer.parseInt(parts[5]);
         }
         for (int i = 0; i < 4; i++) {
-            parts = inStream.nextLine().split(" ");
+            parts = inStream.readLine().split(" ");
             Robot robot = robotMap.get(i);
             robot.realWorkstationID = Integer.parseInt(parts[0]);
             robot.realProduction = Integer.parseInt(parts[1]);
@@ -80,7 +83,7 @@ public class Input {
             }
         }
         //读取OK
-        inStream.nextLine();
+        inStream.readLine();
     }
     //根据readmap独到的工作台坐标与readFrame读到的工作台坐标，对每个工作台更新id
     static void findID(){

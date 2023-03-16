@@ -6,13 +6,12 @@ import java.util.List;
 
 public class Output {
 
-    private static final PrintStream outStream = new PrintStream(new BufferedOutputStream(System.out));
-    public static void Print (List<List<String>> list){
-
+    private static final PrintStream outStream = new PrintStream(new BufferedOutputStream(System.out), true);
+    public static void Print (StringBuilder builder){
+        outStream.print(builder);
     }
 
     public static void OKPrint(){
-        outStream.println("OK");
-        outStream.flush();
+        outStream.print("OK\n");
     }
 }
