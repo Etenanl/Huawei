@@ -11,6 +11,11 @@ public class Calculater {
 
     public static List<Double> Caculate(Robot robot){
         List<Double>list = new LinkedList<>();
+        if (robot.state == Const.ROBOT_IDEL){//不应该出现的情况，即调用此函数时robot处于idle状态，此时就让它停下
+            list.add(0.0);
+            list.add(0.0);
+            return list;
+        }
         //根据状态来判断目的地
         double Destination_x = robot.state==1?robot.buyDestination_x:robot.sellDestination_x;
         double Destination_y = robot.state==1?robot.buyDestination_y:robot.sellDestination_y;
@@ -76,6 +81,14 @@ public class Calculater {
             }
         }
         return Const.DO_NOTHING;
+    }
+
+    public static double BetweenWorkDistanceCost(int source, int target){
+        return Math.pow((Input.workStationMap.get(source).x - Input.workStationMap.get(target).x), 2) + Math.pow((Input.workStationMap.get(source).y - Input.workStationMap.get(target).y), 2);
+    }
+
+    public static double Robot2WorkDistanceCost(int robootID, int workstationID){
+        return Math.pow((Input.robotMap.get(robootID).x - Input.workStationMap.get(workstationID).x), 2) + Math.pow((Input.robotMap.get(robootID).y - Input.workStationMap.get(workstationID).y), 2);
     }
 
     public static double CalculateCost(Robot robot,double x1,double y1,double x2,double y2,int firstID,int secondID){

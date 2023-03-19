@@ -2,6 +2,7 @@ package com.huawei.codecraft;
 
 import com.huawei.calculate.Calculater;
 import com.huawei.common.Robot;
+import com.huawei.controller.Scheduler;
 import com.huawei.io.Input;
 
 
@@ -20,6 +21,7 @@ public class Main {
         String line;
         while ((line = Input.inStream.readLine()) != null){
             Input.ReadFrame(line);
+            Scheduler.schedule();
         }
 //        readUtilOK();
 //        outStream.println("OK");
