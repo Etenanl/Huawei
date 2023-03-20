@@ -13,6 +13,8 @@ public class Const {
     public static final int BUY = 5;
     public static final int SELL = 6;
 
+    public static final double AVOID_WALL = 2.0;
+
 
 
     public static final int RANK_TEN = 10;

@@ -210,6 +210,8 @@ public class Input {
             Robot robot = robotMap.get(i);
             robot.realWorkstationID = Integer.parseInt(parts[0]);
             robot.realProduction = Integer.parseInt(parts[1]);
+            robot.speed_x = Double.parseDouble(parts[5]);
+            robot.speed_y = Double.parseDouble(parts[6]);
             robot.direction = Double.parseDouble(parts[7]);
             robot.x = Double.parseDouble(parts[8]);
             robot.y = Double.parseDouble(parts[9]);

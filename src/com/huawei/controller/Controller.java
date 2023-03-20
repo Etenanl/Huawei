@@ -32,10 +32,10 @@ public class Controller {
         planArray[2] = new Plan(2,2,4,Const.RANK_THREE,Const.RANK_FIVE);
 
         planArray[3] = new Plan(3,1,5,Const.RANK_THREE,Const.RANK_FIVE);
-        planArray[4] = new Plan(4,3,5,Const.RANK_FOUR,Const.RANK_FIVE);
+        planArray[4] = new Plan(4,3,5,Const.RANK_THREE,Const.RANK_FIVE);
 
-        planArray[5] = new Plan(5,2,6,Const.RANK_FOUR,Const.RANK_FIVE);
-        planArray[6] = new Plan(6,3,6,Const.RANK_FOUR,Const.RANK_FIVE);
+        planArray[5] = new Plan(5,2,6,Const.RANK_THREE,Const.RANK_FIVE);
+        planArray[6] = new Plan(6,3,6,Const.RANK_THREE,Const.RANK_FIVE);
         //4,5,6->7
         planArray[7] = new Plan(7,4,7,Const.RANK_FIVE,Const.RANK_FIVE);
         planArray[8] = new Plan(8,5,7,Const.RANK_FIVE,Const.RANK_FIVE);
@@ -76,6 +76,8 @@ public class Controller {
         for(int i = 0;i<robots.length;i++){
             robots[i] = Input.robotMap.get(i);
         }
+
+
 
         //初始化WorkStations
         Set<Map.Entry<Integer,WorkStation>> entrys = Input.workStationMap.entrySet();
@@ -266,3 +268,4 @@ class Plan implements Comparable{
         }
     }
 }
+
