@@ -22,6 +22,8 @@ public class Robot {
     public int avoid_wall = 100;
     public int avoid_robot = 100;
 
+    public boolean collisionFlag = false;
+
 
     //机器人处于状态1时买东西要去的目的地工作站
     public int buyDestinationID;

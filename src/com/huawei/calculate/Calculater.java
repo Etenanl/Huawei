@@ -42,49 +42,55 @@ public class Calculater {
 
         IsAwoidWall(robot);
         //线速度计算
-        if(robot.avoid_wall==1){
-            list.add(AVOID_WALL);
-        }else {
-            if(modulus <= 0.4){//到达目标地点则减到0
-                list.add(0.0);
-            } else if (modulus <= 1) {//考虑惯性，提前开始减速，为了避免停在0.4的范围之外卡死，所以给了一个最低限度的速度
-                list.add(1.0);
-            } else{
-                list.add(6.0);//保持6m/s最大速度
-            }
-        }
-        boolean[] location = IsAwoidRobot(robot,0,0);
-        if(robot.avoid_robot==1){
-            list.add(list.remove(0)-1);
+        if(modulus <= 0.4){//到达目标地点则减到0
+            list.add(0.0);
+        } else if (modulus <= 1.5) {//考虑惯性，提前开始减速，为了避免停在0.4的范围之外卡死，所以给了一个最低限度的速度
+            list.add(1.0);
+        } else if (robot.avoid_wall==1) {
+            list.add(0.0);
+        } else if (robot.collisionFlag) {
+            list.add(3.0);
+        } else{
+            list.add(6.0);//保持6m/s最大速度
         }
 
-        if(location[1]&&location[2]){
+//        boolean[] location = IsAwoidRobot(robot,0,0);
+//        if(robot.avoid_robot==1){
+//            list.add(list.remove(0)-1);
+//        }
+//
+//        if(location[1]&&location[2]){
+//            list.add(Math.PI);
+//        }else if(!location[1]&&location[2]){
+//            list.add(-Math.PI);
+//        } else if (location[1]) {
+//            list.add(Math.PI);
+//        }else{
+        if (robot.collisionFlag){
             list.add(Math.PI);
-        }else if(!location[1]&&location[2]){
-            list.add(-Math.PI);
-        } else if (location[1]) {
-            list.add(Math.PI);
-        }else{
-            if(beta > alpha){
-                if(beta - alpha < Math.PI){//应该逆时针旋转
-                    list.add(Math.PI);
+        }
+        else {
+            if (beta > alpha) {
+                if (beta - alpha < Math.PI) {//应该逆时针旋转
+//                    list.add(Math.PI);
+                    list.add((beta - alpha) / 0.02);
+                } else {//顺时针旋转
+//                    list.add(-Math.PI);
+                    list.add(-(2 * Math.PI - beta + alpha) / 0.02);
                 }
-                else{//顺时针旋转
-                    list.add(-Math.PI);
+            } else if (beta < alpha) {
+                if (alpha - beta < Math.PI) {//顺时针旋转
+//                    list.add(-Math.PI);
+                    list.add(-(alpha - beta) / 0.02);
+                } else {//应该逆时针旋转
+//                    list.add(Math.PI);
+                    list.add((2 * Math.PI - alpha + beta) / 0.02);
                 }
-            }
-            else if(beta < alpha){
-                if(alpha - beta < Math.PI){//顺时针旋转
-                    list.add(-Math.PI);
-                }
-                else {//应该逆时针旋转
-                    list.add(Math.PI);
-                }
-            }
-            else{//不旋转
+            } else {//不旋转
                 list.add(0.0);
             }
         }
+//        }
         //角速度计算
         return list;
     }
@@ -125,12 +131,12 @@ public class Calculater {
         return costFirst+costSecond;
     }
     public static void IsAwoidWall(Robot robot){
-        int prediction = 2;
+        double prediction = 1.5;
 
         double prediction_x = robot.x+prediction*Math.cos(robot.direction);
         double prediction_y = robot.y+prediction*Math.sin(robot.direction);
 
-        if(prediction_x>=50||prediction_y>=50||prediction_x<=0||prediction_y<=0){
+        if(prediction_x+0.5>=50||prediction_y+0.53>=50||prediction_x-0.53<=0||prediction_y-0.53<=0){
             robot.avoid_wall = 1;
         }else{
             robot.avoid_wall = 0;

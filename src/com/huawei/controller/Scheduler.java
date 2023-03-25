@@ -16,59 +16,26 @@ public class Scheduler {
             }
         }
 
-        Outer:
-        while (flag > 0) {
-            boolean notEmpty = false;
-            int finalSourceID = -1;
-            int finalTagetId = -1;
+        if (Input.frame < 8600) {
+            Outer:
+            while (flag > 0) {
+                boolean notEmpty = false;
+                int finalSourceID = -1;
+                int finalTagetId = -1;
 
-            //第一优先级：7->8,7->9
-            if (Input.legalSourceWorkstation.get(7).size() != 0) {
-                double cost = Double.MAX_VALUE;
-                for (int i = 8; i < 10; i++) {
-                    for (int target : Input.DestWorkstation89.get(i)) {
-                        for (int source : Input.legalSourceWorkstation.get(7)) {
-                            if (!Input.workStationMap.get(source).RobotProductionLock) {
-                                double distance = Calculater.BetweenWorkDistanceCost(source, target);
-                                if (distance < cost) {
-                                    cost = distance;
-                                    finalSourceID = source;
-                                    finalTagetId = target;
-                                    notEmpty = true;
-                                }
-                            }
-                        }
-                    }
-                }
-                if (notEmpty) {
-                    Input.workStationMap.get(finalSourceID).RobotProductionLock = true;
-                    findOneIdleRobot(finalSourceID, finalTagetId);
-                    flag--;
-                    continue Outer;//如果找到一个满足的plan，设置锁和机器人的状态，floag--，并跳过这一轮的循环
-                }
-            }
-
-            /**
-             * 第二优先级：4,5,6->仅缺少一个材料的7
-             * 第三优先级：4,5,6->仅缺少两个个材料的7
-             * 第四优先级：4,5,6->缺少三个个材料的7
-             */
-            if (Input.legalSourceWorkstation.get(4).size() != 0 || Input.legalSourceWorkstation.get(5).size() != 0 || Input.legalSourceWorkstation.get(6).size() != 0) {
-                for (int i = 1; i < 4; i++) {//缺少材料1种,2种,3种
+                //第一优先级：7->8,7->9
+                if (Input.legalSourceWorkstation.get(7).size() != 0) {
                     double cost = Double.MAX_VALUE;
-                    for (int target : Input.legalDestWorkstation.get(7).get(i)) {
-                        for (int j = 0; j < i; j++) {//遍历缺少的这些材料
-                            int materialType = Input.workStationMap.get(target).emptyMaterial[j];
-                            if (!Input.workStationMap.get(target).RobotMaterialLock[materialType]) {
-                                for (int source : Input.legalSourceWorkstation.get(materialType)) {
-                                    if (!Input.workStationMap.get(source).RobotProductionLock) {
-                                        double distance = Calculater.BetweenWorkDistanceCost(source, target);
-                                        if (distance < cost) {
-                                            cost = distance;
-                                            finalSourceID = source;
-                                            finalTagetId = target;
-                                            notEmpty = true;
-                                        }
+                    for (int i = 8; i < 10; i++) {
+                        for (int target : Input.DestWorkstation89.get(i)) {
+                            for (int source : Input.legalSourceWorkstation.get(7)) {
+                                if (!Input.workStationMap.get(source).RobotProductionLock) {
+                                    double distance = Calculater.BetweenWorkDistanceCost(source, target);
+                                    if (distance < cost) {
+                                        cost = distance;
+                                        finalSourceID = source;
+                                        finalTagetId = target;
+                                        notEmpty = true;
                                     }
                                 }
                             }
@@ -76,26 +43,25 @@ public class Scheduler {
                     }
                     if (notEmpty) {
                         Input.workStationMap.get(finalSourceID).RobotProductionLock = true;
-                        Input.workStationMap.get(finalTagetId).RobotMaterialLock[Input.workStationMap.get(finalSourceID).type] = true;
                         findOneIdleRobot(finalSourceID, finalTagetId);
                         flag--;
-                        continue Outer;
+                        continue Outer;//如果找到一个满足的plan，设置锁和机器人的状态，floag--，并跳过这一轮的循环
                     }
                 }
-            }
 
-            /**
-             * 根据Type456Priority来确定4,5,6的生产优先级
-             */
-            if (Input.legalSourceWorkstation.get(1).size() != 0 || Input.legalSourceWorkstation.get(2).size() != 0 || Input.legalSourceWorkstation.get(3).size() != 0) {
-                for (int i = 0; i < 2; i++) {//根据4,5,6的生产优先级来决定谁先遍历
-                    for (int j = 1; j < 3; j++) {//缺少材料1种,2种
+                /**
+                 * 第二优先级：4,5,6->仅缺少一个材料的7
+                 * 第三优先级：4,5,6->仅缺少两个个材料的7
+                 * 第四优先级：4,5,6->缺少三个个材料的7
+                 */
+                if (Input.legalSourceWorkstation.get(4).size() != 0 || Input.legalSourceWorkstation.get(5).size() != 0 || Input.legalSourceWorkstation.get(6).size() != 0) {
+                    for (int i = 1; i < 4; i++) {//缺少材料1种,2种,3种
                         double cost = Double.MAX_VALUE;
-                        for (int target: Input.legalDestWorkstation.get(Input.Type456Priority[i]).get(j)){
-                            for (int k = 0; k < j; k++) {//遍历缺少的材料
-                                int materialType = Input.workStationMap.get(target).emptyMaterial[k];
-                                if (!Input.workStationMap.get(target).RobotMaterialLock[materialType]){
-                                    for (int source : Input.legalSourceWorkstation.get(materialType)){
+                        for (int target : Input.legalDestWorkstation.get(7).get(i)) {
+                            for (int j = 0; j < i; j++) {//遍历缺少的这些材料
+                                int materialType = Input.workStationMap.get(target).emptyMaterial[j];
+                                if (!Input.workStationMap.get(target).RobotMaterialLock[materialType]) {
+                                    for (int source : Input.legalSourceWorkstation.get(materialType)) {
                                         if (!Input.workStationMap.get(source).RobotProductionLock) {
                                             double distance = Calculater.BetweenWorkDistanceCost(source, target);
                                             if (distance < cost) {
@@ -117,42 +83,167 @@ public class Scheduler {
                             continue Outer;
                         }
                     }
-                }
-            }
-
-            /**
-             * 最低优先级 1,2,3,4,5,6->9
-             */
-            for (int i = 6; i > 0; i--) {
-                if (Input.legalSourceWorkstation.get(i).size() != 0){
-                    double cost = Double.MAX_VALUE;
-                    for (int source: Input.legalSourceWorkstation.get(i)){
-                        if (!Input.workStationMap.get(source).RobotProductionLock){
-                            for (int target: Input.DestWorkstation89.get(9)){
-                                double distance = Calculater.BetweenWorkDistanceCost(source, target);
-                                if (distance < cost) {
-                                    cost = distance;
-                                    finalSourceID = source;
-                                    finalTagetId = target;
-                                    notEmpty = true;
+                    /**
+                     * 4,5,6->9
+                     */
+                    if (!Input.hasType7) {
+                        for (int i = 6; i > 3; i--) {
+                            if (Input.legalSourceWorkstation.get(i).size() != 0) {
+                                double cost = Double.MAX_VALUE;
+                                for (int source : Input.legalSourceWorkstation.get(i)) {
+                                    if (!Input.workStationMap.get(source).RobotProductionLock) {
+                                        for (int target : Input.DestWorkstation89.get(9)) {
+                                            double distance = Calculater.BetweenWorkDistanceCost(source, target);
+                                            if (distance < cost) {
+                                                cost = distance;
+                                                finalSourceID = source;
+                                                finalTagetId = target;
+                                                notEmpty = true;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (notEmpty) {
+                                    Input.workStationMap.get(finalSourceID).RobotProductionLock = true;
+                                    findOneIdleRobot(finalSourceID, finalTagetId);
+                                    flag--;
+                                    continue Outer;
                                 }
                             }
                         }
                     }
-                    if (notEmpty) {
-                        Input.workStationMap.get(finalSourceID).RobotProductionLock = true;
-                        findOneIdleRobot(finalSourceID, finalTagetId);
-                        flag--;
-                        continue Outer;
+                }
+
+                /**
+                 * 根据Type456Priority来确定4,5,6的生产优先级
+                 */
+                if (Input.legalSourceWorkstation.get(1).size() != 0 || Input.legalSourceWorkstation.get(2).size() != 0 || Input.legalSourceWorkstation.get(3).size() != 0) {
+                    for (int i = 0; i < 2; i++) {//根据4,5,6的生产优先级来决定谁先遍历
+                        for (int j = 1; j < 3; j++) {//缺少材料1种,2种
+                            double cost = Double.MAX_VALUE;
+                            for (int target : Input.legalDestWorkstation.get(Input.Type456Priority[i]).get(j)) {
+                                for (int k = 0; k < j; k++) {//遍历缺少的材料
+                                    int materialType = Input.workStationMap.get(target).emptyMaterial[k];
+                                    if (!Input.workStationMap.get(target).RobotMaterialLock[materialType]) {
+                                        for (int source : Input.legalSourceWorkstation.get(materialType)) {
+                                            if (!Input.workStationMap.get(source).RobotProductionLock) {
+                                                double distance = Calculater.BetweenWorkDistanceCost(source, target);
+                                                if (distance < cost) {
+                                                    cost = distance;
+                                                    finalSourceID = source;
+                                                    finalTagetId = target;
+                                                    notEmpty = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (notEmpty) {
+                                Input.workStationMap.get(finalSourceID).RobotProductionLock = true;
+                                Input.workStationMap.get(finalTagetId).RobotMaterialLock[Input.workStationMap.get(finalSourceID).type] = true;
+                                findOneIdleRobot(finalSourceID, finalTagetId);
+                                flag--;
+                                continue Outer;
+                            }
+                        }
+                    }
+                }
+
+                /**
+                 * 最低优先级 1,2,3->9
+                 */
+                if (!Input.hasType7) {
+                    for (int i = 3; i > 0; i--) {
+                        if (Input.legalSourceWorkstation.get(i).size() != 0) {
+                            double cost = Double.MAX_VALUE;
+                            for (int source : Input.legalSourceWorkstation.get(i)) {
+                                if (!Input.workStationMap.get(source).RobotProductionLock) {
+                                    for (int target : Input.DestWorkstation89.get(9)) {
+                                        double distance = Calculater.BetweenWorkDistanceCost(source, target);
+                                        if (distance < cost) {
+                                            cost = distance;
+                                            finalSourceID = source;
+                                            finalTagetId = target;
+                                            notEmpty = true;
+                                        }
+                                    }
+                                }
+                            }
+                            if (notEmpty) {
+                                Input.workStationMap.get(finalSourceID).RobotProductionLock = true;
+                                findOneIdleRobot(finalSourceID, finalTagetId);
+                                flag--;
+                                continue Outer;
+                            }
+                        }
+                    }
+                }
+                else {
+                    for (int i = 6; i > 0; i--) {
+                        if (Input.legalSourceWorkstation.get(i).size() != 0) {
+                            double cost = Double.MAX_VALUE;
+                            for (int source : Input.legalSourceWorkstation.get(i)) {
+                                if (!Input.workStationMap.get(source).RobotProductionLock) {
+                                    for (int target : Input.DestWorkstation89.get(9)) {
+                                        double distance = Calculater.BetweenWorkDistanceCost(source, target);
+                                        if (distance < cost) {
+                                            cost = distance;
+                                            finalSourceID = source;
+                                            finalTagetId = target;
+                                            notEmpty = true;
+                                        }
+                                    }
+                                }
+                            }
+                            if (notEmpty) {
+                                Input.workStationMap.get(finalSourceID).RobotProductionLock = true;
+                                findOneIdleRobot(finalSourceID, finalTagetId);
+                                flag--;
+                                continue Outer;
+                            }
+                        }
+                    }
+                }
+                if (!notEmpty) {
+                    break Outer;
+                }
+            }
+        }
+        judgeCollision();
+        CommandGenerator();
+    }
+    public static void judgeCollision(){
+        for (int i = 0; i < 4; i++) {
+            Input.robotMap.get(i).collisionFlag = false;
+        }
+        for (int i = 0; i < 3; i++) {
+            for (int j = i + 1; j < 4; j++) {
+                Robot robot1 = Input.robotMap.get(i);
+                Robot robot2 = Input.robotMap.get(j);
+                if (!robot1.collisionFlag && !robot2.collisionFlag) {
+                    double Vector_x = robot2.x - robot1.x;
+                    double Vector_y = robot2.y - robot1.y;
+                    double distance = Math.sqrt(Math.pow(Vector_x, 2) + Math.pow(Vector_y, 2));
+                    if (distance < 4) {
+                        double SpeedVector_x = robot1.speed_x - robot2.speed_x;
+                        double SpeedVector_y = robot1.speed_y - robot2.speed_y;
+                        double SpeedModulus = Math.sqrt(Math.pow(SpeedVector_x, 2) + Math.pow(SpeedVector_y, 2));
+                        double regulizeSpeedVector_x = SpeedVector_x / SpeedModulus;
+                        double regulizeSpeedVector_y = SpeedVector_y / SpeedModulus;
+                        for (int k = 0; k < 9; k++) {
+                            if (Math.sqrt(Math.pow(Vector_x - 0.5 * k * regulizeSpeedVector_x, 2) + Math.pow(Vector_y - 0.5 * k * regulizeSpeedVector_y, 2)) < 1.06) {
+                                robot1.collisionFlag = true;
+                                robot2.collisionFlag = true;
+                                break;
+                            }
+                        }
                     }
                 }
             }
-            if (!notEmpty){
-                break Outer;
-            }
         }
-        CommandGenerator();
     }
+
 
     public static void CommandGenerator(){
         StringBuilder builder = new StringBuilder();

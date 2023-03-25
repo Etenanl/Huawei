@@ -36,6 +36,8 @@ public class Input {
 
     public static int[] Type456Priority = new int[3];
 
+    public static boolean hasType7 = false;
+
     public static final BufferedReader inStream = new BufferedReader(new InputStreamReader(System.in));
     //读取地图，第一次更新workStationMap
     //这里读map信息时没有工作台id，读frame才有工作台id，可以想办法进行对应，或者干脆不读取map信息，读第一帧才进行全部初始化
@@ -77,6 +79,9 @@ public class Input {
                     initialWorkstation.x = j * 0.5 + 0.25;
                     initialWorkstation.y = (99 - i) * 0.5 + 0.25;
                     workStationMap.put(workstationID, initialWorkstation);
+                    if (workstationType == 7){
+                        hasType7 = true;
+                    }
                     if (workstationType == 8 || workstationType == 9){
                         DestWorkstation89.get(workstationType).add(workstationID);
                     }
